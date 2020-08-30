@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContinueFilling(sizeGb < getUpperLimit() && !isOom());
             LOGGER.info("Verdict on filling: {}", continueFilling);
             try {
-                handler.post(() -> {
+                routeHandling(() -> {
                     try {
                         double sizeMb = file.length() / FACTOR_MB;
                         displaySize.setText(String.format("%.2f MB", sizeMb));
@@ -158,6 +158,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 size / FACTOR_KB,
                 size / FACTOR_MB,
                 size / FACTOR_GB);
+    }
+
+    private void routeHandling(Runnable runner) {
+        handler.post(runner);
     }
 
     @Override
@@ -184,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.continueFilling = continueFilling;
 
         if (!continueFilling) {
-            handler.post(() -> {
+            routeHandling(() -> {
                 initiateButton.setEnabled(true);
                 initiateButton.setClickable(true);
             });
